@@ -1,6 +1,8 @@
 // create array containing words of varying lengths
 var wordBank = ["psy", "gangnam", "shades", "style", "horse", "explosion"];
-var wordBankUnderscore = ["_ _ _", "_ _ _ _ _ _ _", "_ _ _ _ _ _", "_ _ _ _ _", "_ _ _ _ _", "_ _ _ _ _ _ _ _ _"];
+var wordBankUnderscoreSpaces = ["_ _ _", "_ _ _ _ _ _ _", "_ _ _ _ _ _", "_ _ _ _ _", "_ _ _ _ _", "_ _ _ _ _ _ _ _ _"];
+var wordBankUnderscore = ["___", "_______", "______", "_____", "_____", "_________"];
+
 // maybe make "___" and split string with spaces --> array --> for loop
 // any way to replace the letter of the string with character _?
 
@@ -13,9 +15,7 @@ function generateWord() {
     console.log(randomWord);
 }
 
-// initialize/display wins & losses
-// initialize/display number of guesses left
-// initialize/display array of letters already guessed
+// initialize variables
 var wins = 0;
 var losses = 0;
 var guessesLeft = 15;
@@ -23,9 +23,12 @@ var currentGuesses = [];
 
 // display length of word to user as underscores
 var blankWord = wordBank.indexOf(randomWord);
-if (blankWord !== -1) {
-    var currentWord = document.getElementById("underscores").innerHTML = wordBankUnderscore[blankWord];
-}
+var blankWordSplit = wordBankUnderscore[blankWord].split('');
+var currentWord = document.getElementById("underscores").innerHTML = blankWordSplit.join(' ');
+
+var randomWordSplit = randomWord.split('');
+console.log(randomWordSplit);
+console.log(blankWordSplit);
 
 // assign what is displayed to the user to a variable
 var userDisplay = document.getElementById("game-display");
@@ -47,9 +50,18 @@ document.onkeyup = function(event) {
         // if letter belongs in word
         if (randomWord.indexOf(userGuess) !== -1) {
 
-            // replace correct underscore with letter
-            currentWord.replace(randomWord.indexOf(userGuess), userGuess);
-            
+            // find all indices where the letter belongs & replace correct underscore with letter
+            for (var i = 0; i < randomWord.length; i++) {
+                var indicesOfLetter = [];
+                if (randomWord[i] === userGuess) {
+                    indicesOfLetter.push(i);
+                    blankWordSplit[indicesOfLetter] = userGuess;
+                }
+            }
+            console.log(indicesOfLetter);
+            currentWord = blankWordSplit.join(' ');
+            console.log(blankWordSplit);
+
             // decrement guesses left
             guessesLeft--;
 
