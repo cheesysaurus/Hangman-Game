@@ -1,39 +1,36 @@
-// create array containing words of varying lengths
-var wordBank = ["psy", "gangnam", "shades", "style", "horse", "explosion"];
-var wordBankUnderscoreSpaces = ["_ _ _", "_ _ _ _ _ _ _", "_ _ _ _ _ _", "_ _ _ _ _", "_ _ _ _ _", "_ _ _ _ _ _ _ _ _"];
-var wordBankUnderscore = ["___", "_______", "______", "_____", "_____", "_________"];
+// create object of arrays containing word bank
+var wordBank = {
+    normal: ["psy", "gangnam", "shades", "style", "horse", "explosion"],
+    underscore: ["___", "_______", "______", "_____", "_____", "_________"]
+};
 
-// maybe make "___" and split string with spaces --> array --> for loop
-// any way to replace the letter of the string with character _?
-
-// computer generates random word from array
-var randomWord = wordBank[Math.floor(Math.random() * wordBank.length)];
-console.log(randomWord);
-
-function generateWord() {
-    var randomWord = wordBank[Math.floor(Math.random() * wordBank.length)];
+// function for new game
+function initGame() {
+    // generate new word
+    randomWord = wordBank.normal[Math.floor(Math.random() * wordBank.normal.length)];
     console.log(randomWord);
+
+    guessesLeft = 15;
+    currentGuesses = [];
+
+    // display length of word to user as underscores
+    randomWordIndex = wordBank.normal.indexOf(randomWord);
+    underscoreSplit = wordBank.underscore[randomWordIndex].split('');
+    underscoreJoined = underscoreSplit.join(' ');
+    currentWord = document.getElementById("underscores").innerHTML = underscoreJoined;
+    randomWordSplit = randomWord.split('');
 }
 
 // initialize variables
 var wins = 0;
 var losses = 0;
-var guessesLeft = 15;
-var currentGuesses = [];
-
-// display length of word to user as underscores
-var blankWord = wordBank.indexOf(randomWord);
-var blankWordSplit = wordBankUnderscore[blankWord].split('');
-var currentWord = document.getElementById("underscores").innerHTML = blankWordSplit.join(' ');
-
-var randomWordSplit = randomWord.split('');
-console.log(randomWordSplit);
-console.log(blankWordSplit);
+var guessesLeft;
+var currentGuesses;
 
 // assign what is displayed to the user to a variable
 var userDisplay = document.getElementById("game-display");
 
-// // function to check if user has already guessed a letter
+// function to check if user has already guessed a letter
 // function alreadyGuessed(letter, array) {
 //     return array.indexOf(letter) > -1;
 // }
@@ -41,54 +38,74 @@ var userDisplay = document.getElementById("game-display");
 // when key is pressed
 document.onkeyup = function(event) {
 
-    // capture user guess
+    // assign guess to variable
     var userGuess = event.key.toLowerCase();
     console.log(userGuess);
     
+    // if guesses have not run out
     if (guessesLeft > 0) {
 
-        // if letter belongs in word
-        if (randomWord.indexOf(userGuess) !== -1) {
+        // if letter has not been guessed
+        if (currentGuesses.indexOf(userGuess.toUpperCase()) === -1) {
 
-            // find all indices where the letter belongs & replace correct underscore with letter
-            for (var i = 0; i < randomWord.length; i++) {
-                var indicesOfLetter = [];
-                if (randomWord[i] === userGuess) {
-                    indicesOfLetter.push(i);
-                    blankWordSplit[indicesOfLetter] = userGuess;
+            // if letter belongs in word
+            if (randomWord.indexOf(userGuess) > -1) {
+            
+                // find all indices where the letter belongs & replace underscore at those indices with letter
+                for (var i = 0; i < randomWord.length; i++) {
+                    var indicesOfLetter = [];
+                    if (randomWord[i] === userGuess) {
+                        indicesOfLetter.push(i);
+                        underscoreSplit[indicesOfLetter] = userGuess;
+                    }
+                }
+
+                currentWord = underscoreSplit.join(' ');
+                console.log(indicesOfLetter);
+                console.log(underscoreSplit);
+                console.log(randomWordSplit.join(' '));
+                console.log(currentWord);
+    
+                // decrement guesses left
+                guessesLeft--;
+    
+                // push guess to array of letters guessed
+                currentGuesses.push(" " + userGuess.toUpperCase());
+
+                // if user guesses entire word
+                if (currentWord === randomWordSplit.join(' ')) {
+            
+                    // increment wins
+                    wins++;
+
+                    // alert (or music/gif popup?)
+                    var newGameWin = alert("You got that gangnam style~\nNew game?");
+
+                        // if user wants to play again
+                        if (newGameWin) {
+                            initGame();
+                        }
                 }
             }
-            console.log(indicesOfLetter);
-            currentWord = blankWordSplit.join(' ');
-            console.log(blankWordSplit);
 
-            // decrement guesses left
-            guessesLeft--;
+            // if letter does not belong in word
+            else if (randomWord.indexOf(userGuess) === -1) {
 
-            // push guess to array of letters guessed
-            currentGuesses.push(" " + userGuess.toUpperCase());
-        }
-        // if letter does not belong in word
-        else if (randomWord.indexOf(userGuess) === -1) {
-            // decrement guesses left
-            guessesLeft--;
+                // decrement guesses left
+                guessesLeft--;
+    
+                // push guess to array of letters guessed
+                currentGuesses.push(" " + userGuess.toUpperCase());
+            }
 
-            // push guess to array of letters guessed
-            currentGuesses.push(" " + userGuess.toUpperCase());
-        }
+        }    
 
         // if letter has already been guessed
-        if (currentGuesses.includes(userGuess.toUpperCase())) {
-            // do nothing (or make the letter blink for a second?)
+        else {
             alert("You already guessed " + "\"" + userGuess + "\"");
         }
-
-        // if user guesses word
-            // increment wins
-            // reset guesses left
-            // reset current guesses
-            // computer generates new word
-            // play music or gif popup?
+        // not working ^
+           
     }
 
     // else (if guesses run out)
@@ -97,19 +114,15 @@ document.onkeyup = function(event) {
         losses++;
 
         // alert user of correct word and confirm if user wants to play again
-        var newWord = confirm("Oh no! The correct word was \"" + randomWord + "\".\nWould you like to play again?");
+        var newWordLose = confirm("Oh no! The correct word was \"" + randomWord + "\".\nWould you like to play again?");
+        // need to fix this ^ keeps alerting same word
 
             // if user wants to play again
-            if (newWord) {
-
-                // generate new word
-                generateWord();
-                currentWord;
-                guessesLeft = 15;
-                currentGuesses = [];
+            if (newWordLose) {
+                initGame();
             }
 
-        // play music of gif popup?
+        // play music or gif popup?
     }
 
     // update game display
@@ -122,3 +135,4 @@ document.onkeyup = function(event) {
     
     userDisplay.innerHTML = html;
 }
+initGame();
