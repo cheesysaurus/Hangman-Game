@@ -4,53 +4,54 @@
     - Can't get the alert to pop up when user guesses a repeat letter
 */
 
-// create array containing word bank
-var wordBank = ["psy", "gangnam", "shades", "style", "horse", "explosion"];
+// create an object containing functions/variables used in the game
+var gameObject = {
 
-// define functions/variables for new game
-// function to generate random word
-function selectWord() {
-    return wordBank[Math.floor(Math.random() * wordBank.length)];
-}
+    // create array containing word bank
+    wordBank: ["psy", "gangnam", "shades", "style", "horse", "explosion"],
 
-// function to reset/start new game
-function initGame() {
-    // generate new word
-    randomWord = selectWord();
-    console.log(randomWord);
-    // display underscores
-    currentWord = displayUnderscores();
-    // reset game values
-    guessesLeft = 15;
-    currentGuesses = [];
-}
+    // function to generate random word
+    selectWord: function() {
+        return this.wordBank[Math.floor(Math.random() * this.wordBank.length)];
+    },
 
-// start new game
-initGame();
+    // function to reset/start new game
+    initGame: function() {
+        randomWord = this.selectWord();
+        console.log(randomWord);
+        // display underscores
+        currentWord = this.displayUnderscores();
+        // reset game values
+        guessesLeft = 15;
+        currentGuesses = [];
+    },
 
-// function to display current word as underscores
-function displayUnderscores() {
-    var underscores = "";
-    for (var i = 0; i < randomWord.length; i++) {
-        underscores += "_ ";
+    // function to display current word as underscores
+    displayUnderscores: function() {
+        var underscores = "";
+        for (var i = 0; i < randomWord.length; i++) {
+            underscores += "_ ";
+        }
+        return document.getElementById("underscores").innerHTML = underscores;
     }
-    return document.getElementById("underscores").innerHTML = underscores;
-}
 
-// function to store indices of correct letter & update underscores at indices
-// function updateUnderscores(letter) {
-//     index = randomWord.indexOf(letter);
-//     currentWord = currentWord.replace(index, letter);
-// }
+    // // function to store indices of correct letter & update underscores at indices
+    // function updateUnderscores(letter) {
+    //     index = randomWord.indexOf(letter);
+    //     currentWord = currentWord.replace(index, letter);
+    // }
 
-// initialize score variables
+    // // function to check if user has already guessed a letter
+    // function alreadyGuessed(letter, array) {
+    //     return array.indexOf(letter) > -1;
+    // }
+
+};
+
+// initialize wins/losses & start new game
 var wins = 0;
 var losses = 0;
-
-// function to check if user has already guessed a letter
-// function alreadyGuessed(letter, array) {
-//     return array.indexOf(letter) > -1;
-// }
+gameObject.initGame();
 
 // when key is pressed
 document.onkeyup = function(event) {
@@ -101,7 +102,7 @@ document.onkeyup = function(event) {
 
                         // if user wants to play again
                         if (newGameWin) {
-                            initGame();
+                            gameObject.initGame();
                         }
                 }
             }
@@ -137,7 +138,7 @@ document.onkeyup = function(event) {
 
             // if user wants to play again
             if (newWordLose) {
-                initGame();
+                gameObject.initGame();
             }
 
         // play music or gif popup?
