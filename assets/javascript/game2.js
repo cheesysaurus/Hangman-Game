@@ -1,34 +1,51 @@
-// create object of arrays containing word bank
-var wordBank = {
-    normal: ["psy", "gangnam", "shades", "style", "horse", "explosion"],
-    underscore: ["___", "_______", "______", "_____", "_____", "_________"]
-};
 
-// function for new game
-function initGame() {
-    // generate new word
-    randomWord = wordBank.normal[Math.floor(Math.random() * wordBank.normal.length)];
-    console.log(randomWord);
+/* Issues
+    - Can't get the underscores to update with the letter the user types
+    - Can't get the alert to pop up when user guesses a repeat letter
+*/
 
-    guessesLeft = 15;
-    currentGuesses = [];
+// create array containing word bank
+var wordBank = ["psy", "gangnam", "shades", "style", "horse", "explosion"];
 
-    // display length of word to user as underscores
-    randomWordIndex = wordBank.normal.indexOf(randomWord);
-    underscoreSplit = wordBank.underscore[randomWordIndex].split('');
-    underscoreJoined = underscoreSplit.join(' ');
-    currentWord = document.getElementById("underscores").innerHTML = underscoreJoined;
-    randomWordSplit = randomWord.split('');
+// define functions/variables for new game
+// function to generate random word
+function selectWord() {
+    return wordBank[Math.floor(Math.random() * wordBank.length)];
 }
 
-// initialize variables
+// function to reset/start new game
+function initGame() {
+    // generate new word
+    randomWord = selectWord();
+    console.log(randomWord);
+    // display underscores
+    currentWord = displayUnderscores();
+    // reset game values
+    guessesLeft = 15;
+    currentGuesses = [];
+}
+
+// start new game
+initGame();
+
+// function to display current word as underscores
+function displayUnderscores() {
+    var underscores = "";
+    for (var i = 0; i < randomWord.length; i++) {
+        underscores += "_ ";
+    }
+    return document.getElementById("underscores").innerHTML = underscores;
+}
+
+// function to store indices of correct letter & update underscores at indices
+// function updateUnderscores(letter) {
+//     index = randomWord.indexOf(letter);
+//     currentWord = currentWord.replace(index, letter);
+// }
+
+// initialize score variables
 var wins = 0;
 var losses = 0;
-var guessesLeft;
-var currentGuesses;
-
-// assign what is displayed to the user to a variable
-var userDisplay = document.getElementById("game-display");
 
 // function to check if user has already guessed a letter
 // function alreadyGuessed(letter, array) {
@@ -45,26 +62,27 @@ document.onkeyup = function(event) {
     // if guesses have not run out
     if (guessesLeft > 0) {
 
-        // if letter has not been guessed
+        // if letter has not been guessed (if the letter pressed does not belong in the currentGuesses array)
         if (currentGuesses.indexOf(userGuess.toUpperCase()) === -1) {
 
             // if letter belongs in word
             if (randomWord.indexOf(userGuess) > -1) {
             
-                // find all indices where the letter belongs & replace underscore at those indices with letter
+                // find all indices where the letter belongs
+                var indexArr = [];
                 for (var i = 0; i < randomWord.length; i++) {
-                    var indicesOfLetter = [];
                     if (randomWord[i] === userGuess) {
-                        indicesOfLetter.push(i);
-                        underscoreSplit[indicesOfLetter] = userGuess;
+                        indexArr.push(i);             
                     }
                 }
+                console.log(indexArr);
 
-                currentWord = underscoreSplit.join(' ');
-                console.log(indicesOfLetter);
-                console.log(underscoreSplit);
-                console.log(randomWordSplit.join(' '));
+                // replace underscores at indices & update
+                for (var j = 0; j < indexArr.length; j++) {
+                    currentWord.replace(indexArr[i], userGuess);
+                }
                 console.log(currentWord);
+                // not working
     
                 // decrement guesses left
                 guessesLeft--;
@@ -73,7 +91,7 @@ document.onkeyup = function(event) {
                 currentGuesses.push(" " + userGuess.toUpperCase());
 
                 // if user guesses entire word
-                if (currentWord === randomWordSplit.join(' ')) {
+                if (currentWord === randomWord) {
             
                     // increment wins
                     wins++;
@@ -100,7 +118,7 @@ document.onkeyup = function(event) {
 
         }    
 
-        // if letter has already been guessed
+        // else (if letter has already been guessed)
         else {
             alert("You already guessed " + "\"" + userGuess + "\"");
         }
@@ -125,14 +143,16 @@ document.onkeyup = function(event) {
         // play music or gif popup?
     }
 
+    // assign what is displayed to the user to a variable
+    var userDisplay = document.getElementById("game-display");
+
     // update game display
     var html =
-        "<p>Wins: " +  wins + "<br /><br />" +
-        "Losses: " + losses + "<br /><br />" + 
-        "Current Word: " + currentWord + "<br /><br />" + 
-        "Number of Guesses Remaining: " + guessesLeft + "<br /><br />" + 
-        "Letters Already Guessed: " + currentGuesses + "</p>";
+        "<p>Wins: <span id='wins'>" +  wins + "</span><br /><br />" +
+        "Losses: <span id='losses'>" + losses + "</span><br /><br />" + 
+        "Current Word: <span id='underscores'>" + currentWord + "</span><br /><br />" + 
+        "Number of Guesses Remaining: <span id='guessesLeft'>" + guessesLeft + "</span><br /><br />" + 
+        "Letters Already Guessed: <span id='currentGuesses'>" + currentGuesses + "</span></p>";
     
     userDisplay.innerHTML = html;
 }
-initGame();

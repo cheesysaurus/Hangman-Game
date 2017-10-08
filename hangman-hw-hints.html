@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Hangman</title>
+
+	<link rel="stylesheet" type="text/css" href="">
+</head>
+<body>
+
+	<div id="game">
+		
+	</div>
+
+	
+<script type="text/javascript">
+	// whenever you have something that you know is going to happen many times, create a function for it
+	var selectWord = function() {
+		return options[Math.floor(Math.random * options.length)];
+	};
+
+	var updateWordOnHTML = function() {
+		var html = "wins: " + wins + "<br />";
+		var underscores = "";
+		for (var i = 0; i < selectedWord.length; i++) {
+			underscores += "_ ";
+		}
+		html += underscores;
+		gameDiv.innerHTML = html;
+	};
+
+	// call this function whenever you want to restart the game
+	var init = function() {
+		selectedWord = selectWord();
+		updateWordOnHTML();
+		console.log(selectedWord);
+	}
+
+	// INIT
+	var options = ["initialization", "semicolon", "objects"]; // this variable won't change
+	var gameDiv = document.getElementById("game"); // this variable won't change
+		// grab the HTML element #game so that I can manipulate it later
+	var wins = 0; // this variable will change
+	var selectedWord; // this variable will change
+
+	// PROCESSING
+	// capture user input, document.onkeyup
+	document.onkeyup = function(event) {
+		// have to pass an event, because the event is the act of the user pressing the key, so this event acts as a parameter
+
+		// get the user's key
+		var userKey = event.key.toLowerCase();
+	
+		// do some logic to see if they guessed the right letter
+		var foundIndex = selectedWord.indexOf(userKey);
+			// but this will only find the first instance of the letter...
+			// perhaps use a for loop
+			// or don't do words with duplicate letters for now
+			// or just don't show all letters at once, let the user press the key again, but you need to let the user know this rule
+		// if game is over, go ahead and call init
+	}
+	init();
+	
+
+	// OUTPUT
+
+	
+	
+</script>
+</body>
+</html>
