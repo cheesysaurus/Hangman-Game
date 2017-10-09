@@ -4,21 +4,28 @@
 <meta charset='UTF-8'>
 <title>Hangman Game</title>
 
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet">
+
+<!-- CSS -->
 <link rel='stylesheet' type='text/css' href='./assets/css/style.css'>
 </head>
 <body>
-    <div>
-        <h1>Press any key to get started!</h1>
+    <div id="background-blue">
+        <div class="container">
+            <h1>Press any key to get started!</h1>
 
-        <p id="game-display">
-            Wins: <span id="wins">0</span><br /><br />
-            Losses: <span id="losses">0</span><br /><br />
-            Current Word: <span id="underscores"></span><br /><br />
-            Number of Guesses Remaining: <span id="guessesLeft">15</span><br /><br />
-            Letters Already Guessed: <span id="currentGuesses"></span><br /><br />
-        </p>
+            <p id="game-display">
+                Wins: <span id="wins">0</span><br /><br />
+                Losses: <span id="losses">0</span><br /><br />
+                Current Word: <span id="underscores"></span><br /><br />
+                Number of Guesses Remaining: <span id="guessesLeft">15</span><br /><br />
+                Letters Already Guessed: <span id="currentGuesses"></span><br /><br />
+            </p>
+        </div>
     </div>
 
+    <img id="gif" src="./assets/images/psy.png" alt="psy in mid-dance">
 
 <script src="./assets/javascript/game2.js"></script>
 </body>
