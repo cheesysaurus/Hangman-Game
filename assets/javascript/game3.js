@@ -94,6 +94,12 @@ var hangmanGame = {
             }
         }
 
+        // Remove class "flash" from win/loss score so that it can be added back each time user wins/loses
+        if (hangmanGame.guessesLeft === 14) {
+            $("#win-display").removeClass("flash");
+            $("#loss-display").removeClass("flash");
+        }
+
     },
 
     winOrLose: function() {
@@ -105,6 +111,9 @@ var hangmanGame = {
         // If guesses run out (user loses)
         if (hangmanGame.guessesLeft === 0) {
             hangmanGame.losses++;
+
+            // Flash score
+            $("#loss-display").addClass("flash");
 
             // Play audio
             hangmanGame.loseAudio.play();
@@ -120,6 +129,9 @@ var hangmanGame = {
         // If user still has guesses left and guesses entire word (user wins)
         else if (hangmanGame.underscores.join('') === hangmanGame.randomWord) {
             hangmanGame.wins++;
+
+            // Flash score
+            $("#win-display").addClass("flash");
 
             // Play audio
             hangmanGame.winAudio.play();

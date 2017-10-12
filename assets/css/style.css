@@ -68,3 +68,15 @@ p {
     left: 100px;
     display: none;
 }
+
+/* flashes win/loss score to bold every win/loss */
+.flash {
+    animation: flash 1s ease-out;
+    animation-iteration-count: 1;
+  }
+
+@keyframes flash {
+    0% { font-weight: normal; background-color: none; }
+    50% { font-weight: bold; background-color: #ff25db; padding: 5px; }
+    100% { font-weight: normal; background-color: none; }
+}
