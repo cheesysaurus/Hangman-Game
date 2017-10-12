@@ -11,7 +11,9 @@ var hangmanGame = {
     currentGuesses: [],
     wordOptions: ["psy", "gangnam", "style", "oppa", "shades", "explosion", "dance", "horse"],
     randomWord: '',
-    audioElement: document.getElementById("gangnam-audio"),
+    winAudio: document.getElementById("win-audio"),
+    loseAudio: document.getElementById("lose-audio"),
+    keystrokeAudio: document.getElementById("keystroke-audio"),
 
     // FUNCTIONS
     // =====================================================================================
@@ -103,8 +105,12 @@ var hangmanGame = {
         // If guesses run out (user loses)
         if (this.guessesLeft === 0) {
             this.losses++;
-            confirm("Oh no! The correct word was \"" + this.randomWord + "\".\nWould you like to play again?");
 
+            // Play audio
+            this.loseAudio.play();
+
+            confirm("Oh no! The correct word was \"" + this.randomWord + "\".\nWould you like to play again?");
+    
             // Update game display
             document.getElementById("losses").innerHTML = this.losses;
 
@@ -116,7 +122,7 @@ var hangmanGame = {
             this.wins++;
 
             // Play audio
-            this.audioElement.play();
+            this.winAudio.play();
 
             // Make psy gif appear & dance across page
             this.psyDancesAcrossPage();
@@ -155,6 +161,12 @@ document.onkeyup = function(event) {
     var userGuess = event.key.toUpperCase();
     hangmanGame.checkLetterAndUpdateStats(userGuess);
     hangmanGame.winOrLose();
+
+    // Play audio
+    // hangmanGame.keystrokeAudio.load();
+    // hangmanGame.keystrokeAudio.cloneNode();
+    hangmanGame.keystrokeAudio.currentTime = 0;
+    hangmanGame.keystrokeAudio.play();
 
     // Testing & Debugging
     console.log(userGuess);
