@@ -11,9 +11,11 @@
 <link rel='stylesheet' type='text/css' href='./assets/css/style.css'>
 </head>
 <body>
-    <div id="background-blue">
-        <div class="container">
-            <h1>Press any key to get started!</h1>
+
+    <div class="container">
+        <div id="background-blue">
+            <h1>Welcome to Hangman Style</h1>
+            <h3>Press any key to get started!</h3>
 
             <p id="game-display">
                 Wins: <span id="wins">0</span><br /><br />
@@ -22,11 +24,20 @@
                 Guesses Left: <span id="guessesLeft">15</span><br /><br />
                 Letters Guessed: <span id="currentGuesses"></span><br /><br />
             </p>
+
+            <img id="psy" src="./assets/images/psy.png" alt="psy in mid-dance" />
+            <img id="gif" src="./assets/images/hangman_transparent.gif" alt="gif of psy dancing" />
         </div>
     </div>
 
-    <img id="psy" src="./assets/images/psy.png" alt="psy in mid-dance">
+    <audio id="gangnam-audio" preload="auto">
+        <source id="gangnam-audio" src="./assets/audio/gangnam-style-short.m4a" />
+    </audio>
 
+<!-- jQuery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- JavaScript Link -->
 <script src="./assets/javascript/game3.js"></script>
 </body>
 </html>

@@ -11,6 +11,7 @@ var hangmanGame = {
     currentGuesses: [],
     wordOptions: ["psy", "gangnam", "style", "oppa", "shades", "explosion", "dance", "horse"],
     randomWord: '',
+    audioElement: document.getElementById("gangnam-audio"),
 
     // FUNCTIONS
     // =====================================================================================
@@ -38,13 +39,20 @@ var hangmanGame = {
         console.log(this.underscores);
     },
 
-    findLetterAndUpdateStats: function(letter) {
+    checkLetterAndUpdateStats: function(letter) {
+        // Check if/where letter belongs in word
         var isLetterInWord = false;
-        // Find all indices of user's guess in current word (if any)
         for (var i = 0; i < this.randomWord.length; i++) {
             if (this.randomWord[i] === letter) {
                 isLetterInWord = true;
             }
+        }
+
+        // Check if letter is in the alphabet
+        var isLetter = false;
+        var alphabet = "abcdefghijklmnopqrstuvwxyz";
+        if (alphabet.toUpperCase().includes(letter)) {
+            isLetter = true;
         }
 
         // Check if letter has already been guessed
@@ -53,31 +61,37 @@ var hangmanGame = {
             hasBeenGuessed = true;
         }
 
-        // If letter has already been guessed
-        if (hasBeenGuessed) {
-            alert("You already guessed \"" + letter + "\"");
+        // If user's guess is not a letter
+        if (!isLetter) {
+            return;
         }
-        // If letter has not been guessed yet
+        // If user's guess is a letter
         else {
-             // If user's guess belongs in word
-            if (isLetterInWord) {
-                // Update the appropriate underscores
-                for (var j = 0; j < this.randomWord.length; j++) {
-                    if (this.randomWord[j] === letter) {
-                        this.underscores[j] = letter;
-                    }
-                }
-                this.currentGuesses.push(" " + letter);
-                this.guessesLeft--;
+            // If letter has already been guessed
+            if (hasBeenGuessed) {
+                alert("You already guessed \"" + letter + "\"");
             }
-            // If user's guess does not belong not in word
+            // If letter has not been guessed yet
             else {
-                this.currentGuesses.push(" " + letter);
-                this.guessesLeft--;
+                // If user's guess belongs in word
+                if (isLetterInWord) {
+                    // Update the appropriate underscores
+                    for (var j = 0; j < this.randomWord.length; j++) {
+                        if (this.randomWord[j] === letter) {
+                            this.underscores[j] = letter;
+                        }
+                    }
+                    this.currentGuesses.push(" " + letter);
+                    this.guessesLeft--;
+                }
+                // If user's guess does not belong not in word
+                else {
+                    this.currentGuesses.push(" " + letter);
+                    this.guessesLeft--;
+                }
             }
         }
 
-       
     },
 
     winOrLose: function() {
@@ -100,7 +114,14 @@ var hangmanGame = {
         // If user still has guesses left and guesses entire word (user wins)
         else if (this.underscores.join('') === this.randomWord) {
             this.wins++;
-            confirm("You got that gangnam style~\nNew game?");
+
+            // Play audio
+            this.audioElement.play();
+
+            // Make psy gif appear & dance across page
+            this.psyDancesAcrossPage();
+
+            // confirm("You got that gangnam style~\nNew game?");
 
             // Update game display
             document.getElementById("wins").innerHTML = this.wins;
@@ -113,9 +134,18 @@ var hangmanGame = {
         console.log("Wins: " + this.wins + " | Losses: " + this.losses + " | Guesses Left: " + this.guessesLeft);
         console.log(this.underscores.join(''));
         
-    } // winOrLose() (Line 91)
+    },
 
-} // hangmanGame (Line 3)
+    psyDancesAcrossPage: function() {
+        // $("#gif").css("display", "unset");
+        // $("#gif").css({'left':'-300','opacity':'1'});
+        // $("#gif").animate({'left':'800','opacity':'0'}, 8000, function(){
+        //     $(this).css({'left':'-800', 'opacity':'0'});
+        // });
+        $("#gif").show().delay(1000).fadeOut();
+    }
+
+}
 
 // MAIN PROCESS
 // =====================================================================================
@@ -123,7 +153,7 @@ hangmanGame.initGame();
 
 document.onkeyup = function(event) {
     var userGuess = event.key.toUpperCase();
-    hangmanGame.findLetterAndUpdateStats(userGuess);
+    hangmanGame.checkLetterAndUpdateStats(userGuess);
     hangmanGame.winOrLose();
 
     // Testing & Debugging
