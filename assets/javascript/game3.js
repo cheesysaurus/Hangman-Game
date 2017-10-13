@@ -19,33 +19,33 @@ var hangmanGame = {
     // =====================================================================================
     initGame: function() {
         // Generate new word
-        hangmanGame.randomWord = hangmanGame.wordOptions[Math.floor(Math.random() * hangmanGame.wordOptions.length)].toUpperCase();
+        this.randomWord = this.wordOptions[Math.floor(Math.random() * this.wordOptions.length)].toUpperCase();
 
         // Reset underscores, guesses left, current guesses
-        hangmanGame.guessesLeft = 15;
-        hangmanGame.currentGuesses = [];
-        hangmanGame.underscores = [];
+        this.guessesLeft = 15;
+        this.currentGuesses = [];
+        this.underscores = [];
 
         // Display correct number of underscores for current word
-        for (var i = 0; i < hangmanGame.randomWord.length; i++) {
-            hangmanGame.underscores.push("_");
+        for (var i = 0; i < this.randomWord.length; i++) {
+            this.underscores.push("_");
         }
 
         // Update game display
-        document.getElementById("currentGuesses").innerHTML = hangmanGame.currentGuesses;
-        document.getElementById("guessesLeft").innerHTML = hangmanGame.guessesLeft;
-        document.getElementById("underscores").innerHTML = hangmanGame.underscores.join(' ');
+        document.getElementById("currentGuesses").innerHTML = this.currentGuesses;
+        document.getElementById("guessesLeft").innerHTML = this.guessesLeft;
+        document.getElementById("underscores").innerHTML = this.underscores.join(' ');
 
         // Testing & Debugging
-        console.log(hangmanGame.randomWord);
-        console.log(hangmanGame.underscores);
+        console.log(this.randomWord);
+        console.log(this.underscores);
     },
 
     checkLetterAndUpdateStats: function(letter) {
         // Check if/where letter belongs in word
         var isLetterInWord = false;
-        for (var i = 0; i < hangmanGame.randomWord.length; i++) {
-            if (hangmanGame.randomWord[i] === letter) {
+        for (var i = 0; i < this.randomWord.length; i++) {
+            if (this.randomWord[i] === letter) {
                 isLetterInWord = true;
             }
         }
@@ -59,7 +59,7 @@ var hangmanGame = {
 
         // Check if letter has already been guessed
         var hasBeenGuessed = false;
-        if (hangmanGame.currentGuesses.join('').includes(letter)) {
+        if (this.currentGuesses.join('').includes(letter)) {
             hasBeenGuessed = true;
         }
 
@@ -78,24 +78,24 @@ var hangmanGame = {
                 // If user's guess belongs in word
                 if (isLetterInWord) {
                     // Update the appropriate underscores
-                    for (var j = 0; j < hangmanGame.randomWord.length; j++) {
-                        if (hangmanGame.randomWord[j] === letter) {
-                            hangmanGame.underscores[j] = letter;
+                    for (var j = 0; j < this.randomWord.length; j++) {
+                        if (this.randomWord[j] === letter) {
+                            this.underscores[j] = letter;
                         }
                     }
-                    hangmanGame.currentGuesses.push(" " + letter);
-                    hangmanGame.guessesLeft--;
+                    this.currentGuesses.push(" " + letter);
+                    this.guessesLeft--;
                 }
                 // If user's guess does not belong not in word
                 else {
-                    hangmanGame.currentGuesses.push(" " + letter);
-                    hangmanGame.guessesLeft--;
+                    this.currentGuesses.push(" " + letter);
+                    this.guessesLeft--;
                 }
             }
         }
 
         // Remove class "flash" from win/loss score so that it can be added back each time user wins/loses
-        if (hangmanGame.guessesLeft === 14) {
+        if (this.guessesLeft === 14) {
             $("#win-display").removeClass("flash");
             $("#loss-display").removeClass("flash");
         }
@@ -104,53 +104,53 @@ var hangmanGame = {
 
     winOrLose: function() {
         // Update game display
-        document.getElementById("currentGuesses").innerHTML = hangmanGame.currentGuesses;
-        document.getElementById("guessesLeft").innerHTML = hangmanGame.guessesLeft;
-        document.getElementById("underscores").innerHTML = hangmanGame.underscores.join(' ');
+        document.getElementById("currentGuesses").innerHTML = this.currentGuesses;
+        document.getElementById("guessesLeft").innerHTML = this.guessesLeft;
+        document.getElementById("underscores").innerHTML = this.underscores.join(' ');
 
         // If guesses run out (user loses)
-        if (hangmanGame.guessesLeft === 0) {
-            hangmanGame.losses++;
+        if (this.guessesLeft === 0) {
+            this.losses++;
 
             // Flash score
             $("#loss-display").addClass("flash");
 
             // Play audio
-            hangmanGame.loseAudio.play();
+            this.loseAudio.play();
 
-            confirm("Oh no! The correct word was \"" + hangmanGame.randomWord + "\".\nWould you like to play again?");
+            confirm("Oh no! The correct word was \"" + this.randomWord + "\".\nWould you like to play again?");
     
             // Update game display
-            document.getElementById("losses").innerHTML = hangmanGame.losses;
+            document.getElementById("losses").innerHTML = this.losses;
 
             // Reset game
-            hangmanGame.initGame();
+            this.initGame();
         }
         // If user still has guesses left and guesses entire word (user wins)
-        else if (hangmanGame.underscores.join('') === hangmanGame.randomWord) {
-            hangmanGame.wins++;
+        else if (this.underscores.join('') === this.randomWord) {
+            this.wins++;
 
             // Flash score
             $("#win-display").addClass("flash");
 
             // Play audio
-            hangmanGame.winAudio.play();
+            this.winAudio.play();
 
             // Make psy gif appear & dance across page
-            hangmanGame.psyDancesAcrossPage();
+            this.psyDancesAcrossPage();
 
             // confirm("You got that gangnam style~\nNew game?");
 
             // Update game display
-            document.getElementById("wins").innerHTML = hangmanGame.wins;
+            document.getElementById("wins").innerHTML = this.wins;
 
             // Reset game
-            hangmanGame.initGame();
+            this.initGame();
         }
 
         // Testing & Debugging
-        console.log("Wins: " + hangmanGame.wins + " | Losses: " + hangmanGame.losses + " | Guesses Left: " + hangmanGame.guessesLeft);
-        console.log(hangmanGame.underscores.join(''));
+        console.log("Wins: " + this.wins + " | Losses: " + this.losses + " | Guesses Left: " + this.guessesLeft);
+        console.log(this.underscores.join(''));
         
     },
 
@@ -158,7 +158,7 @@ var hangmanGame = {
         // $("#gif").css("display", "unset");
         // $("#gif").css({'left':'-300','opacity':'1'});
         // $("#gif").animate({'left':'800','opacity':'0'}, 8000, function(){
-        //     $(hangmanGame).css({'left':'-800', 'opacity':'0'});
+        //     $(this).css({'left':'-800', 'opacity':'0'});
         // });
         $("#gif").show().delay(1000).fadeOut();
     }
